@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>세컨부스트 PRD — Basic</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; background: #f4f5f7; color: #1a1a2e; line-height: 1.6; }
+.container { max-width: 1080px; margin: 0 auto; padding: 40px 24px; }
+
+.header { background: #fff; border-radius: 12px; padding: 32px 36px; margin-bottom: 24px; border-left: 5px solid #5b5ef4; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+.level-badge { display: inline-block; background: #5b5ef4; color: white; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; margin-bottom: 14px; letter-spacing: .5px; }
+.header h1 { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+.header-meta { font-size: 13px; color: #6c757d; display: flex; flex-wrap: wrap; gap: 16px; }
+
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+.stat { background: #fff; border-radius: 10px; padding: 20px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.06); border-top: 4px solid; }
+.stat-n { font-size: 40px; font-weight: 800; }
+.stat-label { font-size: 13px; color: #666; margin-top: 2px; }
+.stat-sub { font-size: 12px; font-weight: 600; margin-top: 6px; }
+.c-slack { border-color: #4a154b; color: #4a154b; }
+.c-mail { border-color: #1d72b8; color: #1d72b8; }
+.c-memo { border-color: #d97706; color: #d97706; }
+.c-conf { border-color: #e63946; color: #e63946; }
+
+.section { background: #fff; border-radius: 12px; padding: 28px 32px; margin-bottom: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+.section-title { font-size: 15px; font-weight: 700; padding-bottom: 14px; margin-bottom: 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 8px; }
+.note { font-size: 12px; color: #888; margin-bottom: 14px; }
+
+.filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.f-btn { padding: 5px 14px; border: 1.5px solid #dee2e6; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; background: white; color: #444; transition: all .15s; }
+.f-btn:hover { border-color: #adb5bd; }
+.f-btn.on { background: #1a1a2e; color: white; border-color: #1a1a2e; }
+
+/* PRD card */
+.prd { border: 1px solid #e9ecef; border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+.prd-head { display: flex; align-items: center; gap: 10px; padding: 14px 18px; background: #f8f9fb; border-bottom: 1px solid #eee; flex-wrap: wrap; }
+.prd-id { font-size: 11px; font-weight: 800; color: #888; letter-spacing: .5px; }
+.prd-name { font-size: 15px; font-weight: 800; flex: 1; }
+.type-tag { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 5px; white-space: nowrap; }
+.t-slack { background: #efe6f0; color: #4a154b; }
+.t-mail { background: #dceaf7; color: #1d72b8; }
+.t-memo { background: #fdecd2; color: #b45309; }
+.t-conf { background: #ffe0e3; color: #c9323e; }
+.p-badge { font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 5px; }
+.p1 { background: #ffe0e3; color: #c9323e; }
+.p2 { background: #fff3cd; color: #856404; }
+.p3 { background: #e9ecef; color: #495057; }
+
+.prd-body { padding: 16px 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.fld { }
+.fld-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: #999; margin-bottom: 4px; }
+.fld-body { font-size: 13px; color: #333; line-height: 1.6; }
+.fld-body ol { padding-left: 18px; }
+.fld-body li { margin-bottom: 2px; }
+.full { grid-column: 1 / -1; }
+.todo { background: #fff8e6; border-left: 3px solid #f59e0b; border-radius: 0 6px 6px 0; padding: 8px 12px; font-size: 12.5px; margin-top: 4px; }
+.todo .tag { display: inline-block; background: #f59e0b; color: white; font-size: 9px; font-weight: 800; padding: 1px 6px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+.conflict { background: #fff0f1; border-left: 3px solid #e63946; border-radius: 0 6px 6px 0; padding: 10px 12px; font-size: 12.5px; margin-top: 4px; }
+.conflict .tag { display: inline-block; background: #e63946; color: white; font-size: 9px; font-weight: 800; padding: 1px 6px; border-radius: 3px; margin-right: 6px; }
+.opt { display: inline-block; font-weight: 700; }
+
+@media(max-width:700px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .prd-body { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <div class="level-badge">🟢 Basic — 100점</div>
+  <h1>세컨부스트 PRD — 비정형 요구사항 구조화 결과</h1>
+  <div class="header-meta">
+    <span>📂 입력: raw_requirements.txt (15케이스)</span>
+    <span>🧩 슬랙6 · CS4 · 메모3 · 복합2</span>
+    <span>🚩 모순 2건 · [TODO] 21건</span>
+    <span>✍️ [이름] · 2026-07-01</span>
+  </div>
+</div>
+
+<div class="stats-row">
+  <div class="stat c-slack"><div class="stat-n">6</div><div class="stat-label">슬랙 대화</div><div class="stat-sub">케이스 01~06</div></div>
+  <div class="stat c-mail"><div class="stat-n">4</div><div class="stat-label">CS 이메일</div><div class="stat-sub">케이스 07~10</div></div>
+  <div class="stat c-memo"><div class="stat-n">3</div><div class="stat-label">회의 메모</div><div class="stat-sub">케이스 11~13</div></div>
+  <div class="stat c-conf"><div class="stat-n">2</div><div class="stat-label">복합(모순)</div><div class="stat-sub">케이스 14~15</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">📋 케이스별 PRD (15건)</div>
+  <p class="note">⚠️ 복합 케이스(14·15)는 상반된 요구를 본문에 단정하지 않고 [TODO] 의사결정 요청으로 처리. 원문에 없는 정책·수치는 추측하지 않고 [TODO]로 분리.</p>
+  <div class="filter-row">
+    <button class="f-btn on" onclick="ft('all',this)">전체 (15)</button>
+    <button class="f-btn" onclick="ft('slack',this)">💬 슬랙 (6)</button>
+    <button class="f-btn" onclick="ft('mail',this)">✉️ CS 이메일 (4)</button>
+    <button class="f-btn" onclick="ft('memo',this)">📝 회의 메모 (3)</button>
+    <button class="f-btn" onclick="ft('conf',this)">🚩 모순 (2)</button>
+  </div>
+
+  <!-- 01 -->
+  <div class="prd" data-t="slack">
+    <div class="prd-head"><span class="prd-id">케이스 01</span><span class="prd-name">로그인 후 대시보드 진입</span><span class="type-tag t-slack">슬랙 DM</span><span class="p-badge p1">P1</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">로그인 성공 시 첫 화면으로 월별 매출 그래프 대시보드를 노출한다.</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>유저가 로그인</li><li>인증 성공</li><li>월별 매출 그래프 대시보드 즉시 표시</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P1 — "로그인하면 대시보드 바로" 핵심 진입 흐름</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">비로그인 상태로 대시보드 URL 직접 접근 → 로그인 페이지 리다이렉트(창업자 즉흥 합의, 확정 필요)</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO)</div><div class="todo"><span class="tag">TODO</span>기간 필터(주별/일별) 추가 시점 — 창업자 "나중에"(P3)</div></div>
+    </div>
+  </div>
+
+  <!-- 02 -->
+  <div class="prd" data-t="slack">
+    <div class="prd-head"><span class="prd-id">케이스 02</span><span class="prd-name">푸시 알림 + 알림 설정</span><span class="type-tag t-slack">슬랙 채널</span><span class="p-badge p1">P1</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">새 주문 발생 시 FCM 푸시 알림 발송 + 전체 on/off 설정 화면 제공.</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>새 주문 발생</li><li>알림 ON 유저에게 푸시 발송</li><li>유저가 설정에서 전체 on/off</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P1 — "이번 스프린트 꼭" + "투자자 데모 다음주"</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">알림 OFF 유저에게 중요 주문 알림 — 미정</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO)</div><div class="todo"><span class="tag">TODO</span>창업자에게 푸시 OFF 유저의 중요 주문 알림 발송 예외 여부 확인 ("나중에 얘기")</div></div>
+    </div>
+  </div>
+
+  <!-- 03 -->
+  <div class="prd" data-t="slack">
+    <div class="prd-head"><span class="prd-id">케이스 03</span><span class="prd-name">장바구니 자동 정리</span><span class="type-tag t-slack">슬랙 DM</span><span class="p-badge p2">P2</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">담은 지 7일 경과 상품은 장바구니에서 자동 삭제, 품절 상품은 즉시 삭제.</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>상품을 장바구니에 담음</li><li>담은 날부터 7일 경과(또는 품절)</li><li>해당 상품 자동 제거</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P2 — 운영 자동화, 즉시성 신호 없음</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">품절 상품은 7일 전이라도 즉시 삭제(창업자 확정)</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO)</div><div class="todo"><span class="tag">TODO</span>삭제 전 사전 알림 여부 — "있으면 좋고 없어도 되고"(P3, 알아서)</div></div>
+    </div>
+  </div>
+
+  <!-- 04 -->
+  <div class="prd" data-t="slack">
+    <div class="prd-head"><span class="prd-id">케이스 04</span><span class="prd-name">검색 개선 (오타교정·자동완성·정렬)</span><span class="type-tag t-slack">슬랙 채널</span><span class="p-badge p1">P1</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">상품명 기반 자동완성·오타교정 검색 + 검색 결과 인기순 정렬.</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>유저가 검색어(오타 포함) 입력</li><li>자동완성·유사어 보정</li><li>인기순 정렬 결과 노출</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P1 — "VoC 많아요" 반복 불편, 핵심 탐색 경험</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">검색 결과 0건: [TODO] 추천 대체어 정책 미정</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO)</div><div class="todo"><span class="tag">TODO</span>인기순 정렬 기준 — 클릭 vs 구매. "그건 정해야 해요"</div></div>
+    </div>
+  </div>
+
+  <!-- 05 -->
+  <div class="prd" data-t="slack">
+    <div class="prd-head"><span class="prd-id">케이스 05</span><span class="prd-name">팀원 이메일 초대</span><span class="type-tag t-slack">슬랙 DM</span><span class="p-badge p2">P2</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">이메일 초대장 발송 → 미가입자는 가입 후 자동 팀 합류. 무료 5명/유료 무제한, 초대장 7일 유효.</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>관리자가 이메일로 초대</li><li>수신자가 가입(미가입 시)</li><li>해당 팀에 자동 합류</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P2 — 협업 확장 기능, 즉시성 신호 없음</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">무료 5명 초과 초대: 차단/업그레이드 유도(정책 명시 필요)</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO)</div><div class="todo"><span class="tag">TODO</span>이미 다른 팀에 속한 사용자를 초대할 때 처리 — 창업자 "일단 모르겠어요"</div></div>
+    </div>
+  </div>
+
+  <!-- 06 -->
+  <div class="prd" data-t="slack">
+    <div class="prd-head"><span class="prd-id">케이스 06</span><span class="prd-name">결제 실패 자동 재시도</span><span class="type-tag t-slack">슬랙 채널</span><span class="p-badge p1">P1</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">결제 실패 시 하루 1회씩 3일간 재시도, 3회 실패 시 구독 정지(데이터 보존), 카드 변경 시 즉시 재시도.</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>결제 실패 발생</li><li>1일 간격 최대 3회 재시도</li><li>성공 시 구독 유지 / 3회 실패 시 정지</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P1 — 매출 직결 결제 흐름</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">재시도 중 카드 변경 → 즉시 재시도(창업자 확정). 알림은 첫·마지막 실패만 발송</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO)</div><div class="todo"><span class="tag">TODO</span>구독 정지 후 데이터 보존 기간 — 원문 미명시("지우지말고"만)</div></div>
+    </div>
+  </div>
+
+  <!-- 07 -->
+  <div class="prd" data-t="mail">
+    <div class="prd-head"><span class="prd-id">케이스 07</span><span class="prd-name">리뷰 사진 첨부</span><span class="type-tag t-mail">CS 이메일</span><span class="p-badge p2">P2</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">리뷰 작성 화면에서 사진 다중 첨부 가능.</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>유저가 리뷰 작성</li><li>사진 여러 장 첨부</li><li>사진 포함 리뷰 등록</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P2 — "문의 계속" 반복이나 핵심 흐름 아님</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">용량 초과 업로드: 제한 필요(고객사 "알아서 적절히")</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO)</div><div class="todo"><span class="tag">TODO</span>① 사진 최대 장수·용량 제한 수치 ② 부적절 사진 필터링(검수/AI) 정책 — 고객사 확인</div></div>
+    </div>
+  </div>
+
+  <!-- 08 -->
+  <div class="prd" data-t="mail">
+    <div class="prd-head"><span class="prd-id">케이스 08</span><span class="prd-name">회원 탈퇴 접근성 개선</span><span class="type-tag t-mail">CS 이메일</span><span class="p-badge p2">P2</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">마이페이지에 탈퇴 버튼을 잘 보이게 노출.</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>유저가 마이페이지 진입</li><li>탈퇴 버튼 발견·클릭</li><li>탈퇴 처리 진행</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P2 — 불만 반복, 단순 노출 개선</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">탈퇴 후 동일 이메일 재가입 가능 여부 — 정책 미정</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO)</div><div class="todo"><span class="tag">TODO</span>① 탈퇴 시 데이터 즉시 삭제 vs 일정 기간 보관(개인정보) ② 동일 이메일 재가입 허용 — 법무/고객사 확인</div></div>
+    </div>
+  </div>
+
+  <!-- 09 -->
+  <div class="prd" data-t="mail">
+    <div class="prd-head"><span class="prd-id">케이스 09</span><span class="prd-name">할인 쿠폰 발급·적용</span><span class="type-tag t-mail">CS 이메일</span><span class="p-badge p2">P2</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">정액·정률 할인 쿠폰을 코드로 결제 시 적용. 사용 기한·횟수 제한 설정, 중복 적용 불가.</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>유저가 결제 시 쿠폰 코드 입력</li><li>유효성·조건 검증</li><li>할인 적용된 금액 결제</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P2 — 이벤트용, 데모 일정 신호 없음</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">쿠폰 2개 동시 입력: 중복 불가 처리(고객사 확정). 만료/소진 쿠폰: 거부</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO)</div><div class="todo"><span class="tag">TODO</span>최소 주문 금액 조건 적용 여부 — 고객사 "사내 논의 중"</div></div>
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="prd" data-t="mail">
+    <div class="prd-head"><span class="prd-id">케이스 10</span><span class="prd-name">거래 내역 엑셀 내보내기</span><span class="type-tag t-mail">CS 이메일</span><span class="p-badge p2">P2</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">기간 선택 후 거래 내역을 xlsx 파일로 다운로드.</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>유저가 거래내역 화면에서 기간 선택</li><li>엑셀 내보내기 클릭</li><li>해당 기간 xlsx 다운로드</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P2 — "캡처로 대체 중" 불편이나 핵심 아님</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">대량 데이터(1만 건+) 다운로드 지연: 성능 처리 필요(고객사 요구)</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO)</div><div class="todo"><span class="tag">TODO</span>1회 다운로드 최대 건수 — 고객사 "기술팀과 정해야 함"</div></div>
+    </div>
+  </div>
+
+  <!-- 11 -->
+  <div class="prd" data-t="memo">
+    <div class="prd-head"><span class="prd-id">케이스 11</span><span class="prd-name">신규 가입자 온보딩 튜토리얼</span><span class="type-tag t-memo">회의 메모</span><span class="p-badge p2">P2</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">첫 가입자 대상 4단계 온보딩(건너뛰기 가능), 설정에서 다시보기. 모바일·웹 공통.</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>신규 유저 첫 진입</li><li>4단계 튜토리얼 진행(또는 건너뛰기)</li><li>완료/스킵 후 본 화면 진입</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P2 — 디자인 시안 "다음주", 즉시성 보통</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">건너뛰기 버튼 필수(유저 반발 방지)</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO)</div><div class="todo"><span class="tag">TODO</span>재노출 정책 — 매번? 한 번만? 회의 "미정, 결정필요"</div></div>
+    </div>
+  </div>
+
+  <!-- 12 -->
+  <div class="prd" data-t="memo">
+    <div class="prd-head"><span class="prd-id">케이스 12</span><span class="prd-name">다크모드</span><span class="type-tag t-memo">회의 메모</span><span class="p-badge p2">P2</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">마이페이지 토글로 다크모드 전환 + 시스템 설정 연동 자동 모드. 색약 모드는 이번 제외.</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>유저가 마이페이지 진입</li><li>다크모드 토글(또는 자동)</li><li>화면 테마 전환</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P2 — 출시 목표 "이번 분기"</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">다크 모드에서 차트 색상 가독성 저하 → 디자인 재작업 필요(회의 명시)</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO)</div><div class="todo"><span class="tag">TODO</span>적용 범위 — 전체 화면 vs 일부. 회의 "확정 안 됨"</div></div>
+    </div>
+  </div>
+
+  <!-- 13 -->
+  <div class="prd" data-t="memo">
+    <div class="prd-head"><span class="prd-id">케이스 13</span><span class="prd-name">실시간 채팅 상담</span><span class="type-tag t-memo">회의 메모</span><span class="p-badge p2">P2</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">우측 하단 플로팅 버튼 채팅 상담. 영업시간 외 FAQ 챗봇 대체, 상담사 자동 배정, 대기 인원 표시, 이미지 전송.</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>유저가 플로팅 버튼 클릭</li><li>상담사 자동 배정(시간 외 챗봇)</li><li>채팅 상담 진행</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P2 — 사장 지시이나 비용검토 선행 필요</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">파일 전송: 이미지만 허용(메모 명시)</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO)</div><div class="todo"><span class="tag">TODO</span>① 채팅 내역 저장 기간 미정 ② 외부 솔루션 vs 자체 개발 — "비용검토 후 결정"</div></div>
+    </div>
+  </div>
+
+  <!-- 14 conflict -->
+  <div class="prd" data-t="conf">
+    <div class="prd-head"><span class="prd-id">케이스 14</span><span class="prd-name">회원가입·로그인 인증 방식</span><span class="type-tag t-conf">🚩 복합/모순</span><span class="p-badge p1">P1</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">신규 가입·로그인 인증 흐름 (인증 방식은 의사결정 대기). 약관 동의 체크박스 포함.</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>미가입자가 가입 화면 진입</li><li>인증 정보 입력 + 약관 동의</li><li>계정 생성·로그인 완료</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P1 — 모든 기능의 진입점, 보안 감사 일정 직결</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">약관 미동의 시 가입 차단(창업자 확정). 인증 실패: 결정된 방식에 따라 재정의</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO) — 🚩 모순 감지</div>
+        <div class="conflict"><span class="tag">CONFLICT</span><span class="opt">A안(창업자):</span> 비번 없이 매직링크 단독 — 편의·관리 부담↓ &nbsp;↔&nbsp; <span class="opt">B안(보안 컨설턴트):</span> 비밀번호 + 2단계 인증(OTP) 필수 — 보안 감사 통과</div>
+        <div class="todo"><span class="tag">TODO</span>인증 방식 합동 결정 (CEO·보안). 금융 데이터 취급이므로 B안 권고 — 본문에 단정하지 않음</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 15 conflict -->
+  <div class="prd" data-t="conf">
+    <div class="prd-head"><span class="prd-id">케이스 15</span><span class="prd-name">게시글 작성 자동 저장</span><span class="type-tag t-conf">🚩 복합/모순</span><span class="p-badge p1">P1</span></div>
+    <div class="prd-body">
+      <div class="fld"><div class="fld-label">기능 정의</div><div class="fld-body">글 작성 중 30초마다 자동 저장하여 창 종료 시 복구 (저장 위치는 의사결정 대기).</div></div>
+      <div class="fld"><div class="fld-label">사용자 시나리오</div><div class="fld-body"><ol><li>유저가 글 작성 중</li><li>30초 주기 자동 저장</li><li>창 종료/재접속 시 임시저장본 복구</li></ol></div></div>
+      <div class="fld"><div class="fld-label">우선순위</div><div class="fld-body">P1 — 데이터 유실 방지, 작성 경험 핵심</div></div>
+      <div class="fld"><div class="fld-label">예외 케이스</div><div class="fld-body">저장 방식에 따라 다기기 복구 가능 여부가 갈림 → 결정 전 구현 착수 불가</div></div>
+      <div class="fld full"><div class="fld-label">미결 항목(TODO) — 🚩 모순 감지</div>
+        <div class="conflict"><span class="tag">CONFLICT</span><span class="opt">A안:</span> 서버 저장 — 다기기 복구 가능, 트래픽·비용↑ &nbsp;↔&nbsp; <span class="opt">B안:</span> 브라우저 로컬 저장 — 비용↓, 기기 변경 시 복구 불가 (창업자 번복·"더 생각해볼게요")</div>
+        <div class="todo"><span class="tag">TODO</span>자동저장 위치 결정 (블로커 — 구현 방식 완전 상이). CEO 결정 요청</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+<script>
+function ft(type, btn) {
+  document.querySelectorAll('.prd').forEach(r => {
+    r.style.display = (type === 'all' || r.dataset.t === type) ? '' : 'none';
+  });
+  document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+</script>
+</body>
+</html>
