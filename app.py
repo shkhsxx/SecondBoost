@@ -372,8 +372,8 @@ c5.metric("총 이익", f"₩{df['이익'].sum():,.0f}")
 st.divider()
 
 # ── 탭 레이아웃 ─────────────────────────────────────────────────────
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(
-    ["📈 매출 트렌드", "📦 상품 분석", "🏪 지점 분석", "📋 원본 데이터", "🤖 AI 보고서", "📄 PRD 문서"]
+tab1, tab2, tab3, tab4, tab5 = st.tabs(
+    ["📈 매출 트렌드", "📦 상품 분석", "🏪 지점 분석", "📋 원본 데이터", "🤖 AI 보고서"]
 )
 
 # ─ Tab 1: 매출 트렌드 ───────────────────────────────────────────────
@@ -548,36 +548,3 @@ with tab5:
                 )
             except Exception as e:
                 st.error(f"PDF 생성 오류: {e}")
-
-# ─ Tab 6: PRD 문서 ──────────────────────────────────────────────────
-with tab6:
-    st.subheader("📄 PRD 문서 뷰어")
-    st.caption("비정형 요구사항 → PRD 파이프라인 산출물")
-
-    output_dir = Path(__file__).parent / "output"
-    doc_options = {
-        "PRD 문서 (prd_output.md)": output_dir / "prd_output.md",
-        "의사결정 요청서 (decision_request.md)": output_dir / "decision_request.md",
-        "요구사항 구조화 (decisions.md)": output_dir / "decisions.md",
-    }
-
-    selected_doc = st.selectbox("문서 선택", list(doc_options.keys()))
-    doc_path = doc_options[selected_doc]
-
-    if doc_path.exists():
-        content = doc_path.read_text(encoding="utf-8")
-
-        col_view, col_dl = st.columns([5, 1])
-        with col_dl:
-            st.download_button(
-                label="⬇️ 다운로드",
-                data=content.encode("utf-8"),
-                file_name=doc_path.name,
-                mime="text/markdown",
-                use_container_width=True,
-            )
-
-        st.divider()
-        st.markdown(content)
-    else:
-        st.error(f"파일을 찾을 수 없습니다: {doc_path}")
